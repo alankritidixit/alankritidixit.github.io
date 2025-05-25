@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+
+# Load the data (assuming it's saved in 'sales_data.csv')
+df = pd.read_csv('sales_data.csv', delimiter='\t')  # Tab-separated in your example
+
+# View initial structure
+print(df.head())
+
+# Clean missing/null values
+df = df.dropna(subset=['CustomerName', 'Quantity', 'UnitPrice', 'TotalSales'])  # Drop rows with key missing data
+
+# Convert necessary columns to correct data types
+df['Quantity'] = pd.to_numeric(df['Quantity'])
+df['UnitPrice'] = pd.to_numeric(df['UnitPrice'])
+df['TotalSales'] = pd.to_numeric(df['TotalSales'])
+
+
+Step 2: Sum of Sales by Region
+sales_by_region = df.groupby('Region')['TotalSales'].sum()
+print("Sum of Sales by Region:\n", sales_by_region)
+
+
+ Step 3: Average Sales per Product
+avg_sales_per_product = df.groupby('Product')['TotalSales'].mean()
+print("Average Sales per Product:\n", avg_sales_per_product)
+
+
+Step 4: Highest & Lowest Selling Products
+total_sales_per_product = df.groupby('Product')['TotalSales'].sum()
+highest_selling = total_sales_per_product.idxmax()
+lowest_selling = total_sales_per_product.idxmin()
+
+print(f"Highest Selling Product: {highest_selling} - ${total_sales_per_product[highest_selling]:.2f}")
+print(f"Lowest Selling Product: {lowest_selling} - ${total_sales_per_product[lowest_selling]:.2f}")
+
+
+Step 5: NumPy Statistics (Mean, Median, Std)
+sales_values = df['TotalSales'].values
+
+mean_sales = np.mean(sales_values)
+median_sales = np.median(sales_values)
+std_sales = np.std(sales_values)
+
+print(f"Mean of Total Sales: {mean_sales:.2f}")
+print(f"Median of Total Sales: {median_sales:.2f}")
+print(f"Standard Deviation of Total Sales: {std_sales:.2f}")
+
