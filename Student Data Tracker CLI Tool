@@ -1,0 +1,93 @@
+import csv
+
+student_records = []
+
+def add_student():
+    try:
+        name = input("Enter student name: ")
+        roll = input("Enter roll number: ")
+
+        marks = []
+        for i in range(1, 4):
+            mark = float(input(f"Enter marks for subject {i}: "))
+            if mark < 0 or mark > 100:
+                raise ValueError("Marks should be between 0 and 100.")
+            marks.append(mark)
+
+        student = {
+            "name": name,
+            "roll": roll,
+            "marks": marks
+        }
+        student_records.append(student)
+        print("Student record added successfully!\n")
+
+    except ValueError as e:
+        print(f"Invalid input: {e}\n")
+
+def display_all_records():
+    if not student_records:
+        print("No records to display.\n")
+        return
+
+    print("\nAll Student Records:")
+    for student in student_records:
+        print(f"Name: {student['name']}, Roll No: {student['roll']}, Marks: {student['marks']}")
+    print()
+
+def calculate_average():
+    if not student_records:
+        print("No records to calculate average.\n")
+        return
+
+    try:
+        roll = input("Enter roll number to calculate average: ")
+        student = next((s for s in student_records if s['roll'] == roll), None)
+
+        if not student:
+            print("Student not found.\n")
+            return
+
+        avg = sum(student['marks']) / 3
+        print(f"Average marks for {student['name']} (Roll {roll}): {avg:.2f}\n")
+
+    except Exception as e:
+        print(f"Error calculating average: {e}\n")
+
+def save_to_csv(filename="student_records.csv"):
+    try:
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Name", "Roll No", "Subject 1", "Subject 2", "Subject 3"])
+            for s in student_records:
+                writer.writerow([s["name"], s["roll"]] + s["marks"])
+        print(f"Records saved to {filename} successfully!\n")
+    except IOError as e:
+        print(f"File error: {e}\n")
+
+def main():
+    while True:
+        print("==== Student Data Tracker ====")
+        print("1. Add Student")
+        print("2. Display All Records")
+        print("3. Calculate Average Marks")
+        print("4. Save to CSV")
+        print("5. Exit")
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            add_student()
+        elif choice == '2':
+            display_all_records()
+        elif choice == '3':
+            calculate_average()
+        elif choice == '4':
+            save_to_csv()
+        elif choice == '5':
+            print("Exiting program. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.\n")
+
+if __name__ == "__main__":
+    main()
